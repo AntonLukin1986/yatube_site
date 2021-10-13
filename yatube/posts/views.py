@@ -1,11 +1,27 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 
-# Главная страница
-def index(request):    
-    return HttpResponse('Добро пожаловать!')
+from .models import Post, Group
 
 
-# Страница с постами, отфильтрованными по группам
-def group_posts(request, any):
-    return HttpResponse('Категории публикаций')
+def index(request):
+    template = 'posts/index.html'
+    title = 'Последние обновления на сайте'
+    posts = Post.objects.order_by('-pub_date')[:10]
+    context = {
+        'title': title,
+        'posts': posts
+    }
+    return render(request, template, context)
+
+
+def group_posts(request, slug):
+    group = get_object_or_404(Group, slug=slug)
+    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
+    template = 'posts/group_list.html'
+    title = 'Записи сообщества'
+    context = {
+        'title': title,
+        'group': group,
+        'posts': posts
+    }
+    return render(request, template, context)

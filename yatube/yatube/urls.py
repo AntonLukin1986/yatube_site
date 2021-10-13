@@ -21,7 +21,7 @@ from django.urls import include, path
 urlpatterns = [
     # Если запрошена главная страница (''), перейди
     # в файл urls приложения posts и проверь там все пути
-    path('', include('posts.urls')),
+    path('', include('posts.urls', namespace='posts')),
     # Встроенная админка в Django подключена по этому адресу «из коробки»
     path('admin/', admin.site.urls),
 ]
