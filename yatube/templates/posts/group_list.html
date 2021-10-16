@@ -1,45 +1,22 @@
 {% extends 'base.html'%}
-{% load static %}
-<!DOCTYPE html> <!-- Используется html 5 версии -->
-<html lang="ru"> <!-- Язык сайта - русский -->
-  <head>
-    {% block title %}
-      <meta charset="utf-8"> <!-- Кодировка сайта -->
-      <!-- Сайт готов работать с мобильными устройствами -->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Загружаем фав-иконки -->
-      <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="image">
-      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
-      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
-      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
-      <meta name="msapplication-TileColor" content="#da532c">
-      <meta name="theme-color" content="#ffffff">
-      <!-- Подключен файл со стандартными стилями бустрап -->
-      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-      <title>{{ title }} {{ group.title }}</title>
-    {% endblock %}
-  </head>
-  <body>
-    {% block content %}
-      <main>
-        <!-- класс py-5 создает отступы сверху и снизу блока -->
-        <div class="container py-5">
-        <h1><b>Здесь собраны публикации по теме: {{ group.title }}</b></h1>
-        <br>
-          {% for post in posts %}
-            <ul>
-              <li>
-                Автор: {{ post.author.get_full_name }}
-              </li>
-              <li>
-                Дата публикации: {{ post.pub_date|date:"d E Y" }}
-              </li>
-            </ul>
-            <p>{{ post.text }}</p>
-            {% if not forloop.last %}<hr>{% endif %}
-          {% endfor %}
-        </div>
-      </main>
-    {% endblock %}
-  </body>
-</html>
+
+{% block title %}Записи сообщества {{ group.title }}{% endblock %}
+
+{% block content %}
+  <h1><b>Вы находитесь в сообществе: {{ group.title }}</b></h1>
+  <br>
+  <p>{{ group.description|linebreaks }}<p/>
+  <br>
+  {% for post in posts %}
+    <ul>
+      <li>
+        Автор: {{ post.author.get_full_name }}
+      </li>
+      <li>
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      </li>
+    </ul>
+    <p>{{ post.text|linebreaks }}</p>
+    {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
+{% endblock %}
