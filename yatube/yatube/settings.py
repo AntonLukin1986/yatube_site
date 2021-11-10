@@ -13,7 +13,7 @@ SECRET_KEY = '-1udn%-nbw6=rl3rax&rq2op@$zdq15oz^_!(elwxty3%z0-ke'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition

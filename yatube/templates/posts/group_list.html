@@ -1,9 +1,9 @@
 {% extends 'base.html'%}
 
-{% block title %}Записи сообщества {{ group.title }}{% endblock %}
+{% block title %}{{ group.title }}{% endblock %}
 
 {% block content %}
-  <h1><b>Вы находитесь в сообществе: {{ group.title }}</b></h1>
+  <h1>Вы находитесь в сообществе:</h1><h1>{{ group.title }}</h1>
   <br>
   <p>{{ group.description|linebreaks }}<p/>
   <br>
