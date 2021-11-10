@@ -134,8 +134,3 @@ yatube/static/css
 yatube/static/js
 
 yatube/sent_emails/
-
-####
-yatube/about/tests.py
-yatube/posts/tests
-yatube/users/tests
