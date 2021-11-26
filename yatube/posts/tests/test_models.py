@@ -1,58 +1,77 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from posts.models import Group, Post
+from posts.models import Comment, Follow, Group, Post, User
 
-User = get_user_model()
+COMMENT = 'Тестовый комментарий'
+TITLE = 'Тестовая группа'
+TEXT = 'Тестовый текст'
+AUTHOR = 'Author'
+NONAME = 'NoName'
 
 
 class PostModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='auth')
+        cls.user = User.objects.create_user(username=NONAME)
+        cls.author = User.objects.create_user(username=AUTHOR)
         cls.group = Group.objects.create(
-            title='Тестовая группа',
+            title=TITLE
         )
         cls.post = Post.objects.create(
+            author=cls.author,
+            text=TEXT
+        )
+        cls.comment = Comment.objects.create(
             author=cls.user,
-            text='Текст тестового поста',
+            post=cls.post,
+            text=COMMENT
+        )
+        cls.follow = Follow.objects.create(
+            author=cls.author,
+            user=cls.user
         )
 
     def test_models_have_correct_object_names(self):
-        """Проверяем, что у моделей корректно работает __str__."""
-        group = PostModelTest.group
-        post = PostModelTest.post
-        model_names = {
-            group: 'Тестовая группа',
-            post: 'Текст тестового поста'[:15]
+        """Проверяем, что у моделей корректно работает метод __str__."""
+        models_expected = {
+            self.group: self.group.title,
+            self.post: f'Автор: {self.post.author.username}. '
+                       f'Дата: {self.post.created}. '
+                       f'Сообщество: {self.post.group}. '
+                       f'Пост: {self.post.text[:15]}.',
+            self.comment: f'Автор: {self.comment.author.username}. '
+                          f'Создан: {self.comment.created}. '
+                          f'Содержание: {self.comment.text[:15]}. '
+                          f'Пост: {self.comment.post.id}.',
+            self.follow: f'Подписчик: {self.user.username}. '
+                         f'Отслеживает: {self.author.username}.'
         }
-        for model in model_names.keys():
+        for model, expected in models_expected.items():
             with self.subTest(field=model):
-                self.assertEqual(str(model), model_names[model])
+                self.assertEqual(str(model), expected)
 
-    def test_model_Post_have_correct_help_text(self):
+    def test_model_Post_has_correct_help_text(self):
         """Проверяем, что у модели Post корректно работает help_text."""
-        post = PostModelTest.post
-        field_helps = {
-            'text': 'Введите текст поста',
-            'group': 'Выберите cообщество'
+        fields_expected = {
+            'text': 'Текст нового поста',
+            'group': 'Сообщество, к которому будет относиться пост'
         }
-        for field, expected_value in field_helps.items():
+        for field, expected in fields_expected.items():
             with self.subTest(field=field):
                 self.assertEqual(
-                    post._meta.get_field(field).help_text, expected_value)
+                    Post._meta.get_field(field).help_text, expected)
 
-    def test_model_Post_have_correct_verbose_name(self):
+    def test_model_Post_has_correct_verbose_name(self):
         """Проверяем, что у модели Post корректно работает verbose_name."""
-        post = PostModelTest.post
-        field_verbose = {
+        fields_verbose = {
             'text': 'Текст поста',
-            'pub_date': 'Дата публикации',
+            'created': 'Дата создания',
             'author': 'Автор',
-            'group': 'Сообщество'
+            'group': 'Сообщество',
+            'image': 'Изображение'
         }
-        for field, expected_value in field_verbose.items():
+        for field, expected in fields_verbose.items():
             with self.subTest(field=field):
                 self.assertEqual(
-                    post._meta.get_field(field).verbose_name, expected_value)
+                    Post._meta.get_field(field).verbose_name, expected)

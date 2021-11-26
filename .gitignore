@@ -128,9 +128,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Добавлять в gitignore для hw
-# static files
-yatube/static/css
-yatube/static/js
 
+# Добавлять в gitignore для каждой hw !!!
+
+# static files
+yatube/static/
+# media files
+yatube/media/
+# emails
 yatube/sent_emails/

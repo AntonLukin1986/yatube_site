@@ -26,12 +26,12 @@ class UserPagesTests(TestCase):
             reverse('users:password_reset_done'):
             'users/password_reset_done.html',
             reverse('users:password_reset_confirm', kwargs={
-                'uidb64': 1, 'token': 2
-                }): 'users/password_reset_confirm.html',
+                'uidb64': 'uidb64', 'token': 'token'
+            }): 'users/password_reset_confirm.html',
             reverse('users:password_reset_complete'):
             'users/password_reset_complete.html',
             reverse('users:logout'): 'users/logged_out.html'
-            }
+        }
         for namespace, template in namespaces_templates.items():
             with self.subTest(namespace=namespace):
                 response = self.authorized_client.get(namespace)
@@ -48,8 +48,5 @@ class UserPagesTests(TestCase):
         }
         for field, expected in form_fields.items():
             with self.subTest(field=field):
-                form_field = response.context.get('form').fields.get(field)
+                form_field = response.context['form'].fields.get(field)
                 self.assertIsInstance(form_field, expected)
-
-#             Запуск конкретного теста:
-# python yatube/manage.py test users.tests.test_views.<имя класса>.<имя теста>

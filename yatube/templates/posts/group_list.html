@@ -3,21 +3,16 @@
 {% block title %}{{ group.title }}{% endblock %}
 
 {% block content %}
-  <h1>Вы находитесь в сообществе:</h1><h1>{{ group.title }}</h1>
+  <h2>Вы находитесь в сообществе:</h2>
+  <h1>{{ group.title }}</h1>
   <br>
-  <p>{{ group.description|linebreaks }}<p/>
+  <h4>{{ group.description|linebreaks }}</h4>
   <br>
+
   {% for post in page_obj %}
-    <ul>
-      <li>
-        Автор: {{ post.author.get_full_name }}
-      </li>
-      <li>
-        Дата публикации: {{ post.pub_date|date:"d E Y" }}
-      </li>
-    </ul>
-    <p>{{ post.text|linebreaks }}</p>
+    {% include 'posts/includes/post.html' with group_list=True %}
     {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
+  
   {% include 'posts/includes/paginator.html' %}
 {% endblock %}

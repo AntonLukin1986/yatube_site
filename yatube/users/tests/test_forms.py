@@ -10,10 +10,9 @@ class UserCreateFormTests(TestCase):
         self.guest_client = Client()
 
     def test_create_new_user(self):
-        """При заполнении формы создания учётной записи
-           создаётся новый пользователь в User."""
+        """Заполненная форма создания учётной записи
+           добавляет нового пользователя в модель User."""
         users_count = User.objects.count()
-
         form_data = {
             'first_name': 'Мистер',
             'last_name': 'Твистер',
@@ -22,11 +21,5 @@ class UserCreateFormTests(TestCase):
             'password1': 'As45OPj9',
             'password2': 'As45OPj9'
         }
-        self.guest_client.post(
-            reverse('users:signup'),
-            data=form_data
-        )
+        self.guest_client.post(reverse('users:signup'), data=form_data)
         self.assertEqual(User.objects.count(), users_count + 1)
-
-# Запуск теста:
-# python yatube/manage.py test users.tests.test_forms
