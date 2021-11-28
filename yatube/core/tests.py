@@ -10,6 +10,7 @@ class ViewTestClass(TestCase):
         self.client = Client()
 
     def test_error_page(self):
+        """Проверка использования URL-адресами соответствующих шаблов."""
         response = self.client.get(UNEXISTING_URL)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
         self.assertTemplateUsed(response, 'core/404.html')

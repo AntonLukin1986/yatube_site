@@ -9,7 +9,7 @@
     {% endif %}
     {% if not group_list and post.group %}
       <li>
-        Сообщество <a href="{% url 'posts:group_list' post.group.slug %}">{{ post.group }}</a>
+        Сообщество: <a href="{% url 'posts:group_list' post.group.slug %}">{{ post.group }}</a>
       </li>
     {% endif %}
     {% if post_detail %}

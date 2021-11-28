@@ -4,11 +4,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
-from .settings import PAGINATOR_PAGE
+from posts import settings
 
 
 def paginator(request, posts):
-    paginator = Paginator(posts, PAGINATOR_PAGE)
+    paginator = Paginator(posts, settings.PAGINATOR_PAGE)
     page_number = request.GET.get('page')
     return paginator.get_page(page_number)
 

@@ -1,18 +1,23 @@
-{% with request.resolver_match.view_name as view_name %}
+<form method="post" action="
+  {% if password_change_form %}
+    {% url 'users:password_change' %}
+  {% elif password_reset_form %}
+    {% url 'users:password_reset' %}
+  {% endif %}">
 
-  <form method="post" action="{% if view_name == 'users:password_change'%}{% url 'users:password_change' %}{% endif %}">
-    {% csrf_token %}
+  {% csrf_token %}
 
-    {% if view_name == 'users:password_change'%}
-      <div class="form-group row my-3 p-3">
-        <label for="id_old_password">
-          Старый пароль
-          <span class="required text-danger">*</span>
-        </label>    
-        <input type="password" name="old_password" autofocus class="form-control" required id="id_old_password">
-      </div>
-    {% endif %}
+  {% if password_change_form %}
+    <div class="form-group row my-3 p-3">
+      <label for="id_old_password">
+        Старый пароль
+        <span class="required text-danger">*</span>
+      </label>    
+      <input type="password" name="old_password" autofocus class="form-control" required id="id_old_password">
+    </div>
+  {% endif %}
 
+  {% if password_reset_confirm or password_change_form %}
     <div class="form-group row my-3 p-3">
       <label for="id_new_password1">
         Новый пароль
@@ -36,7 +41,7 @@
         </ul>
       </small>
     </div>
-
+  
     <div class="form-group row my-3 p-3">
       <label for="id_new_password2">
         Подтверждение нового пароля
@@ -44,12 +49,27 @@
       </label>    
       <input type="password" name="new_password2" class="form-control" required id="id_new_password2">
     </div>
+  {% endif %}
 
-    <div class="col-md-6 offset-md-4">
-      <button type="submit" class="btn btn-primary">
-        {{ button }}
-      </button>
+  {% if password_reset_form %}
+    <div class="form-group row my-3 p-3">
+      <label for="id_email">
+        Адрес электронной почты
+        <span class="required text-danger">*</span>
+      </label>    
+      <input type="email" name="email" maxlength="254" class="form-control" required id="id_email">
     </div>
-  </form>
+  {% endif %}
 
-{% endwith %}
+  <div class="col-md-6 offset-md-4">
+    <button type="submit" class="btn btn-primary">
+      {% if password_reset_confirm %}
+        Назначить новый пароль
+      {% elif password_change_form %}
+        Изменить пароль
+      {% elif password_reset_form %}
+        Сбросить пароль
+      {% endif %}
+    </button>
+  </div>
+</form>

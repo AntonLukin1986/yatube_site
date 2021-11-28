@@ -217,7 +217,6 @@ class PostCreateFormTests(TestCase):
         """Шаблон post_detail.html при создании комментария
         формируется с правильным контекстом."""
         response = self.author.get(self.POST_DETAIL_URL)
-        form_field = {'text': forms.fields.CharField}
         self.assertIsInstance(
-            response.context['form'].fields['text'], form_field['text']
+            response.context['form'].fields['text'], forms.fields.CharField
         )

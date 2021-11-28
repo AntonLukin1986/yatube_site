@@ -3,7 +3,20 @@
     <div class="card">
       <div class="card-header">{{ card_header }}</div>
       <div class="card-body"><p>{{ card_body }}</p>
-      </div>
-    </div>
-  </div>
-</div>
+
+        {% if password_reset_confirm or password_change_form or password_reset_form %}
+          {% include 'users/includes/form.html' %}
+        {% endif %}
+
+        {% if login_signup_form %}
+          {% include 'users/includes/login_signup_form.html'%}
+        {% endif %}
+
+        {% if password_reset_complete %}
+          <a href="{% url 'users:login' %}">войти</a>
+        {% endif %}
+
+      </div> <!-- card-body -->
+    </div> <!-- card -->
+  </div> <!-- col -->
+</div> <!-- row -->

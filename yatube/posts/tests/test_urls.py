@@ -16,7 +16,6 @@ INDEX_URL = reverse('posts:index')
 LOGIN_URL = reverse('users:login') + '?next='
 POST_CREATE_URL = reverse('posts:post_create')
 PROFILE_URL = reverse('posts:profile', args=[AUTHOR])
-UNEXISTING_URL = '/unexisting_url/'
 UNFOLLOW_URL = reverse('posts:profile_unfollow', args=[AUTHOR])
 
 
@@ -55,8 +54,7 @@ class PostPagesURLTest(TestCase):
             [FOLLOW_URL, self.author, HTTPStatus.FOUND],
             [UNFOLLOW_URL, self.guest, HTTPStatus.FOUND],
             [UNFOLLOW_URL, self.other, HTTPStatus.FOUND],
-            [UNFOLLOW_URL, self.author, HTTPStatus.NOT_FOUND],
-            [UNEXISTING_URL, self.guest, HTTPStatus.NOT_FOUND]
+            [UNFOLLOW_URL, self.author, HTTPStatus.NOT_FOUND]
         ]
         for url, client, code in cases:
             with self.subTest(url=url, client=client):
