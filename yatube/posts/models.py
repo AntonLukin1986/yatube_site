@@ -101,6 +101,18 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        # ограничение вносится на уровне БД
+        constraints = (
+            # сочетание user и author должно быть уникальным
+            models.UniqueConstraint(
+                fields=['user', 'author'], name='user_author_unique'
+            ),
+            # user не может быть author
+            models.CheckConstraint(
+                check=~(models.Q(user=models.F('author'))),
+                name='user_is_not_author'
+            )
+        )
 
     def __str__(self):
         return (

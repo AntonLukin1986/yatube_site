@@ -126,8 +126,8 @@ class PostCreateFormTests(TestCase):
             content_type='image/gif'
         )
         form_data = {
-            'group': self.group_other.id,
             'text': TEXT_EDITED,
+            'group': self.group_other.id,
             'image': uploaded
         }
         response = self.author.post(
