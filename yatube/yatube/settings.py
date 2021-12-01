@@ -18,6 +18,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
     'testserver',
+    # 'www.shahter86.pythonanywhere.com',
+    # 'shahter86.pythonanywhere.com',
 ]
 
 
@@ -142,6 +144,13 @@ LOGIN_REDIRECT_URL = 'posts:index'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# https://help.pythonanywhere.com/pages/SMTPForFreeUsers/
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'anton1986lukin@gmail.com'
+# EMAIL_HOST_PASSWORD = 'hmxlmcuygllhynez'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
