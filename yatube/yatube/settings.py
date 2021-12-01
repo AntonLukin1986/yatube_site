@@ -13,7 +13,12 @@ SECRET_KEY = '-1udn%-nbw6=rl3rax&rq2op@$zdq15oz^_!(elwxty3%z0-ke'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    'testserver',
+]
 
 
 # Application definition
@@ -132,6 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'users:login'
 
 LOGIN_REDIRECT_URL = 'posts:index'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 

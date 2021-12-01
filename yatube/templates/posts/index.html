@@ -4,6 +4,10 @@
 {% block title %}Последние обновления на сайте{% endblock %}
 
 {% block content %}
+  {% if not user.is_authenticated %}
+    {% include 'posts/includes/greeting.html' %}
+  {% endif %}
+
   {% include 'posts/includes/switcher.html' with index=True %}
 
   {% cache 20 index_page page_obj.number %}
