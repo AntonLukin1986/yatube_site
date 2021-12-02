@@ -22,7 +22,6 @@ ALLOWED_HOSTS = [
     # 'shahter86.pythonanywhere.com',
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -71,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.year.year'
+                'core.context_processors.year.year',
             ],
         },
     },
@@ -129,7 +128,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/dev_server'),)
+
+# для подключения статики на pythonanywhere.com:
+# в консоли сервера >> python manage.py collectstatic (вся статика соберётся в 'static')
+# Указать к ней путь в настройках "WEB".
+# Прим.: для dev-сервера вся статика подтягивается автоматически.
 
 MEDIA_URL = '/media/'
 
@@ -148,7 +154,7 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 # https://help.pythonanywhere.com/pages/SMTPForFreeUsers/
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER = 'anton1986lukin@gmail.com'
-# EMAIL_HOST_PASSWORD = 'hmxlmcuygllhynez'
+# EMAIL_HOST_PASSWORD = 'пароль_приложения'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 
