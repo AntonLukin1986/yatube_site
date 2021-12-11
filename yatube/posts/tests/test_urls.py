@@ -9,9 +9,11 @@ AUTHOR = 'Author'
 NONAME = 'NoName'
 SLUG = 'test-slug'
 
-FOLLOW_URL = reverse('posts:profile_follow', args=[AUTHOR])
+AUTHORS_INDEX_URL = reverse('posts:authors_index')
 FOLLOW_LIST_URL = reverse('posts:follow_index')
+FOLLOW_URL = reverse('posts:profile_follow', args=[AUTHOR])
 GROUP_URL = reverse('posts:group_list', args=[SLUG])
+GROUPS_INDEX_URL = reverse('posts:groups_index')
 INDEX_URL = reverse('posts:index')
 LOGIN_URL = reverse('users:login') + '?next='
 POST_CREATE_URL = reverse('posts:post_create')
@@ -54,7 +56,9 @@ class PostPagesURLTest(TestCase):
             [FOLLOW_URL, self.author, HTTPStatus.FOUND],
             [UNFOLLOW_URL, self.guest, HTTPStatus.FOUND],
             [UNFOLLOW_URL, self.other, HTTPStatus.FOUND],
-            [UNFOLLOW_URL, self.author, HTTPStatus.NOT_FOUND]
+            [UNFOLLOW_URL, self.author, HTTPStatus.NOT_FOUND],
+            [AUTHORS_INDEX_URL, self.guest, HTTPStatus.OK],
+            [GROUPS_INDEX_URL, self.guest, HTTPStatus.OK],
         ]
         for url, client, code in cases:
             with self.subTest(url=url, client=client):
@@ -86,7 +90,9 @@ class PostPagesURLTest(TestCase):
             [self.POST_DETAIL_URL, self.guest, 'posts/post_detail.html'],
             [POST_CREATE_URL, self.other, 'posts/post_create.html'],
             [self.POST_EDIT_URL, self.author, 'posts/post_create.html'],
-            [FOLLOW_LIST_URL, self.other, 'posts/follow.html']
+            [FOLLOW_LIST_URL, self.other, 'posts/follow.html'],
+            [AUTHORS_INDEX_URL, self.guest, 'posts/authors.html'],
+            [GROUPS_INDEX_URL, self.guest, 'posts/groups.html']
         ]
         for url, client, template in cases:
             with self.subTest(field=url):

@@ -19,6 +19,23 @@ def index(request):
     })
 
 
+def groups_index(request):
+    return render(
+        request, 'posts/groups.html', {'groups': Group.objects.all()}
+    )
+
+
+def authors_index(request):
+    users = User.objects.all()
+    authors = []
+    for user in users:
+        if user.posts.exists():             # попробовать без exists()
+            authors.append(user)
+    return render(
+        request, 'posts/authors.html', {'authors': authors}
+    )
+
+
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     return render(request, 'posts/group_list.html', {

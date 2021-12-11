@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block title %}Авторы{% endblock %}
+
+{% block content %}
+  {% include 'posts/includes/switcher.html' with authors=True %}
+
+  <ul style="list-style-type:none" >
+    {% for author in authors %}
+      <li>
+        <a href="{% url 'posts:profile' author.username %}">{{ author.get_full_name }}</a>
+      </li>
+      <br>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

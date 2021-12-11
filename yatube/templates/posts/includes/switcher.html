@@ -3,12 +3,22 @@
     <ul class="nav nav-tabs">
       <li class="nav-item">
         <a class="nav-link {% if index %}active{% endif %}" href="{% url 'posts:index' %}">
-          Все авторы
+          Все посты
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'posts:follow_index' %}">
           Избранные авторы
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if groups %}active{% endif %}" href="{% url 'posts:groups_index' %}">
+          Сообщества
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if authors %}active{% endif %}" href="{% url 'posts:authors_index' %}">
+          Авторы
         </a>
       </li>
     </ul>

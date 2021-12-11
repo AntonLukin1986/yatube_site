@@ -31,6 +31,8 @@ AUTHOR_OTHER = 'OtherAuthor'
 FOLLOWER = 'Подписчик'
 UNFOLLOWER = 'НеПодписчик'
 
+AUTHORS_INDEX_URL = reverse('posts:authors_index')
+GROUPS_INDEX_URL = reverse('posts:groups_index')
 FOLLOW_URL = reverse('posts:profile_follow', args=[AUTHOR_OTHER])
 FOLLOW_LIST_URL = reverse('posts:follow_index')
 GROUP_URL = reverse('posts:group_list', args=[SLUG])
@@ -60,10 +62,6 @@ class PostPagesTests(TestCase):
             title=TITLE,
             slug=SLUG
         )
-        cls.group_other = Group.objects.create(
-            title=TITLE_OTHER,
-            slug=SLUG_OTHER
-        )
         uploaded = SimpleUploadedFile(
             name='small.gif',
             content=SMALL_GIF,
@@ -92,20 +90,33 @@ class PostPagesTests(TestCase):
         cls.auth_unfollower.force_login(cls.unfollower)
 
     def test_pages_show_correct_context(self):
-        """Шаблоны index, group_list, profile, post_detail и follow
-        формируются с правильным контекстом."""
+        """Шаблоны index, group_list, profile, post_detail, follow, authors и
+        groups формируются с правильным контекстом."""
         urls = [
             INDEX_URL,
             GROUP_URL,
             PROFILE_URL,
             self.POST_DETAIL_URL,
-            FOLLOW_LIST_URL
+            FOLLOW_LIST_URL,
+            AUTHORS_INDEX_URL,
+            GROUPS_INDEX_URL
         ]
         for url in urls:
             with self.subTest(url=url):
                 response = self.auth_follower.get(url)
                 if url == self.POST_DETAIL_URL:
                     post = response.context['post']
+                elif url == AUTHORS_INDEX_URL:
+                    author = response.context['authors'][0]
+                    self.assertEqual(len(response.context['authors']), 1)
+                    self.assertEqual(author.id, self.author.id)
+                    self.assertEqual(author.username, self.author.username)
+                elif url == GROUPS_INDEX_URL:
+                    group = response.context['groups'][0]
+                    self.assertEqual(len(response.context['groups']), 1)
+                    self.assertEqual(group.id, self.group.id)
+                    self.assertEqual(group.title, self.group.title)
+                    self.assertEqual(group.slug, self.group.slug)
                 else:
                     post = response.context['page_obj'][0]
                     self.assertEqual(len(response.context['page_obj']), 1)
@@ -128,6 +139,10 @@ class PostPagesTests(TestCase):
     def test_post_not_displayed_on_wrong_pages(self):
         """Пост отсутствует на странице другой группы, в профайле
         другого автора и в ленте не у подписчика."""
+        self.group_other = Group.objects.create(
+            title=TITLE_OTHER,
+            slug=SLUG_OTHER
+        )
         urls = [
             PROFILE_OTHER_URL,
             GROUP_OTHER_URL,

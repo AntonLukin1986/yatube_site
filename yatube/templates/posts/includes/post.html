@@ -20,6 +20,11 @@
         Всего постов пользователя: {{ post.author.posts.all.count }}
       </li>
     {% endif %}
+    {% if index and post.comments.exists %}
+      <li>
+        Комментариев: {{ post.comments.all.count }}
+      </li>
+    {% endif %}
   </ul>
 
   {% if not post_detail %}

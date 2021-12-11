@@ -23,7 +23,9 @@ class RoutesURLTest(TestCase):
              f'/profile/{AUTHOR}/follow/'],
             ['profile_unfollow',
              [AUTHOR],
-             f'/profile/{AUTHOR}/unfollow/']
+             f'/profile/{AUTHOR}/unfollow/'],
+            ['groups_index', [], '/groups/'],
+            ['authors_index', [], '/authors/'],
         ]
         for name, param, url in cases:
             with self.subTest(name=name):

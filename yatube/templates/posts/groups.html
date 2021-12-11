@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block title %}Сообщества{% endblock %}
+
+{% block content %}
+  {% include 'posts/includes/switcher.html' with groups=True %}
+
+  <ul style="list-style-type:none" >
+    {% for group in groups %}
+      <li>
+        <a href="{% url 'posts:group_list' group.slug %}">{{ group }}</a>
+      </li>
+      <br>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

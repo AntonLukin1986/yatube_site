@@ -49,5 +49,6 @@ class UserCreateFormTests(TestCase):
         for field in form_fields:
             self.assertIsInstance(
                 response.context['form'].fields[field],
-                forms.fields.CharField
+                forms.fields.CharField if field != 'email'
+                else forms.fields.EmailField
             )
