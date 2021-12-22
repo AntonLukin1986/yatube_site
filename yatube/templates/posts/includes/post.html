@@ -31,7 +31,7 @@
     <a href="{% url 'posts:post_detail' post.id %}">подробная информация</a><br>
   {% endif %}
 
-  {% thumbnail post.image "700x500" crop="center" upscale=True as im %}
+  {% thumbnail post.image "700x700" as im %}
     <img class="card-img my-2" src="{{ im.url }}">
   {% endthumbnail %}
 

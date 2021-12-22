@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
+from posts import settings
 from posts.forms import CommentForm, PostForm
 from posts.models import Follow, Group, Post, User
-from posts import settings
 
 
 def paginator(request, posts):
@@ -15,7 +15,9 @@ def paginator(request, posts):
 
 def index(request):
     return render(request, 'posts/index.html', {
-        'page_obj': paginator(request, Post.objects.all())
+        'page_obj': paginator(
+            request, Post.objects.select_related('author', 'group').all()
+        )
     })
 
 
@@ -26,13 +28,12 @@ def groups_index(request):
 
 
 def authors_index(request):
-    users = User.objects.all()
+    posts = Post.objects.select_related('author').all()
     authors = []
-    for user in users:
-        if user.posts.exists():             # попробовать без exists()
-            authors.append(user)
+    for post in posts:
+        authors.append(post.author)
     return render(
-        request, 'posts/authors.html', {'authors': authors}
+        request, 'posts/authors.html', {'authors': set(authors)}
     )
 
 
