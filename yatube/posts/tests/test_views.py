@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from posts.models import Comment, Follow, Group, Post, User
+from posts.models import Comment, Follow, Group, Like, Post, User
 from posts.settings import PAGINATOR_PAGE
 
 COMMENT = 'Тестовый комментарий'
@@ -83,6 +83,8 @@ class PostPagesTests(TestCase):
             user=cls.follower
         )
         cls.POST_DETAIL_URL = reverse('posts:post_detail', args=[cls.post.id])
+        cls.POST_LIKE_URL = reverse('posts:add_like', args=[cls.post.id])
+        cls.POST_UNLIKE_URL = reverse('posts:delete_like', args=[cls.post.id])
         cls.guest = Client()
         cls.auth_follower = Client()
         cls.auth_follower.force_login(cls.follower)
@@ -104,22 +106,23 @@ class PostPagesTests(TestCase):
         for url in urls:
             with self.subTest(url=url):
                 response = self.auth_follower.get(url)
-                if url == self.POST_DETAIL_URL:
-                    post = response.context['post']
-                elif url == AUTHORS_INDEX_URL:
-                    author = response.context['authors'][0]
-                    self.assertEqual(len(response.context['authors']), 1)
+                if url == AUTHORS_INDEX_URL:
+                    authors = response.context['authors']
+                    self.assertEqual(len(authors), 1)
+                    author = authors[0]
                     self.assertEqual(author.id, self.author.id)
                     self.assertEqual(author.username, self.author.username)
                 elif url == GROUPS_INDEX_URL:
-                    group = response.context['groups'][0]
                     self.assertEqual(len(response.context['groups']), 1)
+                    group = response.context['groups'][0]
                     self.assertEqual(group.id, self.group.id)
                     self.assertEqual(group.title, self.group.title)
                     self.assertEqual(group.slug, self.group.slug)
+                elif url == self.POST_DETAIL_URL:
+                    post = response.context['post']
                 else:
-                    post = response.context['page_obj'][0]
                     self.assertEqual(len(response.context['page_obj']), 1)
+                    post = response.context['page_obj'][0]
                 self.assertEqual(post.id, self.post.id)
                 self.assertEqual(post.author, self.post.author)
                 self.assertEqual(post.group, self.post.group)
@@ -178,7 +181,7 @@ class PostPagesTests(TestCase):
         )
 
     def test_group_on_group_page(self):
-        """Граппа на странице групп-ленты."""
+        """Группа на странице групп-ленты."""
         group = self.guest.get(GROUP_URL).context['group']
         self.assertEqual(self.group, group)
         self.assertEqual(self.group.title, group.title)
@@ -211,6 +214,24 @@ class PostPagesTests(TestCase):
         self.auth_follower.get(UNFOLLOW_URL)
         self.assertFalse(
             Follow.objects.filter(author=self.author_other, user=self.follower)
+        )
+
+    def test_like_post(self):
+        """Авторизованный пользователь может поставить лайк посту."""
+        self.assertFalse(
+            Like.objects.filter(post=self.post, user=self.follower)
+        )
+        self.auth_follower.get(self.POST_LIKE_URL)
+        self.assertTrue(
+            Like.objects.filter(post=self.post, user=self.follower)
+        )
+
+    def test_unlike_post(self):
+        """Авторизованный пользователь может отменить свой лайк посту."""
+        Like.objects.create(post=self.post, user=self.follower)
+        self.auth_follower.get(self.POST_UNLIKE_URL)
+        self.assertFalse(
+            Like.objects.filter(post=self.post, user=self.follower)
         )
 
 

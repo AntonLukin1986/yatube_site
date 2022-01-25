@@ -31,6 +31,8 @@ class PostPagesURLTest(TestCase):
         cls.post = Post.objects.create(author=cls.user_author)
         cls.POST_DETAIL_URL = reverse('posts:post_detail', args=[cls.post.id])
         cls.POST_EDIT_URL = reverse('posts:post_edit', args=[cls.post.id])
+        cls.POST_LIKE_URL = reverse('posts:add_like', args=[cls.post.id])
+        cls.POST_UNLIKE_URL = reverse('posts:delete_like', args=[cls.post.id])
         cls.guest = Client()
         cls.author = Client()
         cls.author.force_login(cls.user_author)
@@ -59,6 +61,12 @@ class PostPagesURLTest(TestCase):
             [UNFOLLOW_URL, self.author, HTTPStatus.NOT_FOUND],
             [AUTHORS_INDEX_URL, self.guest, HTTPStatus.OK],
             [GROUPS_INDEX_URL, self.guest, HTTPStatus.OK],
+            [self.POST_LIKE_URL, self.guest, HTTPStatus.FOUND],
+            [self.POST_LIKE_URL, self.other, HTTPStatus.FOUND],
+            [self.POST_LIKE_URL, self.author, HTTPStatus.FOUND],
+            [self.POST_UNLIKE_URL, self.guest, HTTPStatus.FOUND],
+            [self.POST_UNLIKE_URL, self.other, HTTPStatus.FOUND],
+            [self.POST_UNLIKE_URL, self.author, HTTPStatus.NOT_FOUND],
         ]
         for url, client, code in cases:
             with self.subTest(url=url, client=client):
@@ -75,7 +83,14 @@ class PostPagesURLTest(TestCase):
             [FOLLOW_URL, self.other, PROFILE_URL],
             [FOLLOW_URL, self.author, PROFILE_URL],
             [UNFOLLOW_URL, self.guest, LOGIN_URL + UNFOLLOW_URL],
-            [UNFOLLOW_URL, self.other, PROFILE_URL]
+            [UNFOLLOW_URL, self.other, PROFILE_URL],
+            [self.POST_LIKE_URL, self.guest, LOGIN_URL + self.POST_LIKE_URL],
+            [self.POST_LIKE_URL, self.other, self.POST_DETAIL_URL],
+            [self.POST_LIKE_URL, self.author, self.POST_DETAIL_URL],
+            [self.POST_UNLIKE_URL,
+             self.guest,
+             LOGIN_URL + self.POST_UNLIKE_URL],
+            [self.POST_UNLIKE_URL, self.other, self.POST_DETAIL_URL]
         ]
         for url, client, expected_url in cases:
             with self.subTest(url=url, client=client):

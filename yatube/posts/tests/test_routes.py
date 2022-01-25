@@ -26,6 +26,8 @@ class RoutesURLTest(TestCase):
              f'/profile/{AUTHOR}/unfollow/'],
             ['groups_index', [], '/groups/'],
             ['authors_index', [], '/authors/'],
+            ['add_like', [POST_ID], f'/posts/{POST_ID}/like/'],
+            ['delete_like', [POST_ID], f'/posts/{POST_ID}/unlike/'],
         ]
         for name, param, url in cases:
             with self.subTest(name=name):

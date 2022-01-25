@@ -154,21 +154,17 @@ class PostCreateFormTests(TestCase):
             'text': TEXT_EDITED,
             'image': uploaded
         }
-        clients = [self.guest, self.not_author]
-        for client in clients:
+        for client in [self.guest, self.not_author]:
             with self.subTest(client=client):
-                response = self.client.post(
-                    self.POST_EDIT_URL,
-                    data=form_data
-                )
-                posts_edit_attempt = Post.objects.filter(
+                response = self.client.post(self.POST_EDIT_URL, data=form_data)
+                post_edit_attempt = Post.objects.filter(
                     id=self.post.id,
                     author=self.post.author,
                     group=self.post.group,
                     text=self.post.text,
                     image=self.post.image
                 )
-                self.assertEqual(posts_edit_attempt.count(), 1)
+                self.assertEqual(post_edit_attempt.count(), 1)
                 self.assertRedirects(response, LOGIN_URL + self.POST_EDIT_URL)
 
     def test_post_create_template_shows_correct_context(self):

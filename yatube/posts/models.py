@@ -72,6 +72,7 @@ class Comment(CreatedModel):
     )
 
     class Meta(CreatedModel.Meta):
+        ordering = ('created',)
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
@@ -116,6 +117,38 @@ class Follow(models.Model):
 
     def __str__(self):
         return (
-            f'Подписчик: {self.user.username}. '
-            f'Отслеживает: {self.author.username}.'
+            f'{self.user.username} подписан на {self.author.username}.'
+        )
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='made_like',
+        verbose_name='Поставил лайк'
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='likes',
+        verbose_name='Оценённый пост'
+    )
+
+    class Meta:
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
+        constraints = (
+            models.UniqueConstraint(
+                fields=['user', 'post'], name='user_post_like_unique'
+            ),
+            # models.CheckConstraint(                                   # не работает !!!
+            #     check=~(models.Q(user=models.F('post'))),
+            #     name='user_is_not_author'
+            # )
+        )
+
+    def __str__(self):
+        return (
+            f'{self.user.username} оценил пост: {self.post.text[:15]}.'
         )

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from posts import settings
 from posts.forms import CommentForm, PostForm
-from posts.models import Follow, Group, Post, User
+from posts.models import Follow, Group, Like, Post, User
 
 
 def paginator(request, posts):
@@ -28,12 +28,12 @@ def groups_index(request):
 
 
 def authors_index(request):
-    posts = Post.objects.select_related('author').all()
-    authors = []
-    for post in posts:
-        authors.append(post.author)
+    users = User.objects.prefetch_related('posts').all()
+    authors = [user for user in users if user.posts.exists()]
     return render(
-        request, 'posts/authors.html', {'authors': set(authors)}
+        request,
+        'posts/authors.html',
+        {'authors': authors}
     )
 
 
@@ -59,8 +59,14 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    has_like = (request.user.is_authenticated
+                and request.user != post.author
+                and Like.objects.
+                filter(post_id=post_id, user=request.user).exists())
     return render(request, 'posts/post_detail.html', {
-        'post': get_object_or_404(Post, id=post_id),
+        'post': post,
+        'has_like': has_like,
         'form': CommentForm()
     })
 
@@ -133,3 +139,20 @@ def profile_unfollow(request, username):
         Follow, user=request.user, author__username=username
     ).delete()
     return redirect('posts:profile', username)
+
+
+@login_required
+def post_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if (request.user != post.author and not Like.objects.
+       filter(user=request.user, post=post).exists()):
+        Like.objects.create(user=request.user, post=post)
+    return redirect('posts:post_detail', post_id)
+
+
+@login_required
+def post_unlike(request, post_id):
+    get_object_or_404(
+        Like, user=request.user, post__id=post_id
+    ).delete()
+    return redirect('posts:post_detail', post_id)

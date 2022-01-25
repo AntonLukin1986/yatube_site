@@ -44,8 +44,8 @@ class PostModelTest(TestCase):
                           f'Создан: {self.comment.created}. '
                           f'Содержание: {self.comment.text[:15]}. '
                           f'Пост: {self.comment.post.id}.',
-            self.follow: f'Подписчик: {self.user.username}. '
-                         f'Отслеживает: {self.author.username}.'
+            self.follow: f'{self.user.username} подписан '
+                         f'на {self.author.username}.'
         }
         for model, expected in models_expected.items():
             with self.subTest(field=model):

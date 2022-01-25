@@ -25,6 +25,11 @@
         Комментариев: {{ post.comments.all.count }}
       </li>
     {% endif %}
+    {% if index and post.likes.exists %}
+      <li>
+        Лайков: {{ post.likes.all.count }}
+      </li>
+    {% endif %}
   </ul>
 
   {% if not post_detail %}
@@ -47,5 +52,15 @@
     <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
       редактировать запись
     </a>
+  {% endif %}
+
+  {% if post_detail and user != post.author and user.is_authenticated %}
+    {% if has_like %}
+      <b>Лайк засчитан!<b><a class="btn btn-lg btn-light" href="{% url 'posts:delete_like' post.id %}" role="button">отменить</a>
+    {% else %}
+      <a class="btn btn-lg btn-primary" href="{% url 'posts:add_like' post.id %}" role="button">
+        Поставить лайк
+      </a>
+    {% endif %}
   {% endif %}
 </article>

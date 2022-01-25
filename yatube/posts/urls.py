@@ -41,4 +41,10 @@ urlpatterns = [
     path('authors/',
          views.authors_index,
          name='authors_index'),
+    path('posts/<int:post_id>/like/',
+         views.post_like,
+         name='add_like'),
+    path('posts/<int:post_id>/unlike/',
+         views.post_unlike,
+         name='delete_like'),
 ]
