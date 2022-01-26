@@ -20,15 +20,13 @@
         Всего постов пользователя: {{ post.author.posts.all.count }}
       </li>
     {% endif %}
-    {% if index and post.comments.exists %}
-      <li>
-        Комментариев: {{ post.comments.all.count }}
-      </li>
-    {% endif %}
-    {% if index and post.likes.exists %}
-      <li>
-        Лайков: {{ post.likes.all.count }}
-      </li>
+    {% if index or follow %}
+      {% if post.comments.exists %}
+        <li>Комментариев: {{ post.comments.all.count }}</li>
+      {% endif %}
+      {% if post.likes.exists %}
+        <li>Лайков: {{ post.likes.all.count }}</li>
+      {% endif %}
     {% endif %}
   </ul>
 
