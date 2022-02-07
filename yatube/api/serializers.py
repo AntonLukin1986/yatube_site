@@ -85,7 +85,7 @@ class LikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Like
-        exclude = ('id',)
+        fields = '__all__'
         validators = [
             UniqueTogetherValidator(
                 queryset=Like.objects.all(),

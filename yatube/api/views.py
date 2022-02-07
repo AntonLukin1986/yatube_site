@@ -18,8 +18,8 @@ class ListCreateDeleteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     pass
 
 
-class CreateDeleteViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin,
-                          mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class CreateDeleteViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                          viewsets.GenericViewSet):
     pass
 
 
@@ -68,7 +68,8 @@ class FollowViewSet(ListCreateDeleteViewSet):
         serializer.save(user=self.request.user)
 
 
-class LikeViewSet(ListCreateDeleteViewSet):
+# создает по posts/id/like/ , удаляет по posts/id/like/id .
+class LikeViewSet(CreateDeleteViewSet):
     serializer_class = LikeSerializer
     permission_classes = (OwnerOrReadOnly,)
 
