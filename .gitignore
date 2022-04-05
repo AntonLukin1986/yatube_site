@@ -132,11 +132,4 @@ dmypy.json
 .pyre/
 
 
-# static files
-yatube/static/
-# media files
-yatube/media/
-# emails
-yatube/sent_emails/
-
 api_tests_praktikum/
