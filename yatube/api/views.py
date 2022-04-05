@@ -1,25 +1,22 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from api.permissions import AuthorOrReadOnly, OwnerOrReadOnly
 from api.serializers import (
     CommentSerializer, FollowSerializer, GroupSerializer, LikeSerializer,
     PostSerializer
 )
-from posts.models import Group, Post
+from posts.models import Group, Like, Post
 
 
 class ListCreateDeleteViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                               mixins.CreateModelMixin, viewsets.GenericViewSet,
                               mixins.DestroyModelMixin):
-    pass
-
-
-class CreateDeleteViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
-                          viewsets.GenericViewSet):
     pass
 
 
@@ -68,19 +65,17 @@ class FollowViewSet(ListCreateDeleteViewSet):
         serializer.save(user=self.request.user)
 
 
-# создает по posts/id/like/ , удаляет по posts/id/like/id .
-class LikeViewSet(CreateDeleteViewSet):
-    serializer_class = LikeSerializer
-    permission_classes = (OwnerOrReadOnly,)
-
-    def get_queryset(self):
-        return self.get_current_post().likes.all()
-
-    def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user,
-            post=self.get_current_post()
+class APILike(APIView):
+    def post(self, request, post_id):
+        serializer = LikeSerializer(
+            context={'request': request, 'view': self}, data=request.data
         )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_current_post(self):
-        return get_object_or_404(Post, id=self.kwargs.get('post_id'))
+    def delete(self, request, post_id):
+        like = get_object_or_404(Like, post=post_id)
+        like.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

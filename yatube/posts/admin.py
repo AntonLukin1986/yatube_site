@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from rest_framework.authtoken.models import TokenProxy
+
 from posts.models import Comment, Follow, Group, Post, Like
 
 
@@ -18,6 +20,7 @@ class PostAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+admin.site.unregister(TokenProxy)  # убирает из админки токены
 admin.site.register(Post, PostAdmin)
 admin.site.register(Group)
 admin.site.register(Comment)

@@ -36,15 +36,15 @@ if settings.DEBUG:
 
 # настройки приложения drf-yasg:
 schema_view = get_schema_view(
-   openapi.Info(
-      title="API Yatube",
-      default_version='v1',
-      description="Документация к API проекта Yatube",
-      contact=openapi.Contact(email="shahter86@mail.ru"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,)
+    openapi.Info(
+        title="API Yatube",
+        default_version='v1',
+        description="Документация к API проекта Yatube",
+        contact=openapi.Contact(email="shahter86@mail.ru"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,)
 )
 
 urlpatterns += [

@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
@@ -76,12 +77,8 @@ class CurrentPostDefault:
 
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True,
-        default=serializers.CurrentUserDefault()
-    )
-    post = serializers.StringRelatedField(default=CurrentPostDefault())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    post = serializers.HiddenField(default=CurrentPostDefault())
 
     class Meta:
         model = Like
