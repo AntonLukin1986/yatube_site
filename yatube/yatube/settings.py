@@ -173,11 +173,11 @@ SIMPLE_JWT = {
 
 # возможность передавать токен со страницы http://127.0.0.1:8000/swagger/
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Bearer': {
-        'type': 'apiKey',
-        'name': 'Authorization',
-        'in': 'header'
-      }
-   }
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
