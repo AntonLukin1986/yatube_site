@@ -5,10 +5,10 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-1udn%-nbw6=rl3rax&rq2op@$zdq15oz^_!(elwxty3%z0-ke'
+SECRET_KEY = os.environ('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', default=False)
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -175,9 +175,9 @@ SIMPLE_JWT = {
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
       'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
+        'type': 'apiKey',
+        'name': 'Authorization',
+        'in': 'header'
       }
    }
 }
