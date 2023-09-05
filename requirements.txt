@@ -12,7 +12,7 @@ coverage==6.1.1
 cryptography==36.0.1
 decorator==5.1.0
 defusedxml==0.7.1
-Django==2.2.19
+Django==2.2.28
 django-debug-toolbar==3.2.2
 django-debug-toolbar-force==0.1.8
 django-extensions==3.1.3
